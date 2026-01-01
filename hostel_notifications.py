@@ -101,7 +101,7 @@ Time: {action_time}
     server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
 
     # Login using Gmail App Password
-    server.login("tangi.manikanta@gmail.com", "qucu fnax oznm wvjs")
+    server.login("tangi.manikanta@gmail.com", "GOOGLE_APP_PASSWORD")
 
     # Send the email
     server.send_message(msg)
@@ -131,11 +131,11 @@ conn.commit()
 NOW = datetime.now().time()
 
 # Define morning summary time (7:00 AM)
-MORNING_TIME = time(12, 53)
+MORNING_TIME = time(7, 00)
 
 # Run summary only between 7:00 AM and 7:05 AM
 # This prevents sending the same summary again and again
-if MORNING_TIME <= NOW < time(12, 59):
+if MORNING_TIME <= NOW < time(7, 00):
 
     # Get total tenants and total income from tenants table
     cur.execute("""
@@ -170,7 +170,7 @@ Total Monthly Income: ₹{total_income}
     server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
 
     # Login to Gmail
-    server.login("tangi.manikanta@gmail.com", "qucu fnax oznm wvjs")
+    server.login("tangi.manikanta@gmail.com", "GOOGLE_APP_PASSWORD")
 
     # Send summary email
     server.send_message(msg)
@@ -181,3 +181,4 @@ Total Monthly Income: ₹{total_income}
 
 # Close database connection after everything is done
 conn.close()
+
