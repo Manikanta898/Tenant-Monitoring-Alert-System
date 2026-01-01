@@ -1,65 +1,110 @@
-# 🏨 Hostel Tenant Monitoring System (PostgreSQL + Python)
-
-This project simulates a **real-world hostel management system** where tenant data is maintained in PostgreSQL and important events are **automatically notified via email** using Python.
-
-The system is designed to:
-- Send **real-time alerts** when a tenant’s details are **updated or deleted**
-- Send a **daily morning summary** of total tenants and total income
-- Avoid duplicate or repeated notifications
+Hostel Tenant Monitoring System (PostgreSQL + Python)
+An automated backend system to monitor hostel tenant records and send real-time alerts and daily summaries using PostgreSQL triggers and Python.
 
 ---
 
-## 📌 Real-World Scenario
+## Table of Contents
+- Getting Started  
+- Data Sources  
+- File Descriptions  
+- System Logic and Notifications  
+- Technologies Used  
+- Usage  
 
-Imagine you run a hostel and have a **data entry operator (DEO)** who maintains tenant records.
+---
 
-### Business rules implemented:
+## Getting Started
+To run this project locally, clone the repository and ensure PostgreSQL and Python are installed on your system.
 
-### ✅ INSERT (New tenant joins)
-- No email is sent immediately
-- New tenants are included in the **next morning summary**
+This project uses PostgreSQL triggers to capture database changes and Python scripts to send email notifications automatically.
+
+---
+
+## Data Sources
+The data used in this project is generated and maintained within a PostgreSQL database.
+
+- `tenants` table stores active hostel tenant records
+- `tenant_audit` table stores historical UPDATE and DELETE operations via triggers
+
+No external datasets are required.
+
+---
+
+## File Descriptions
+- `hostel_notifications.py`  
+  Python script that:
+  - Sends real-time email alerts for UPDATE / DELETE operations
+  - Sends a daily morning summary of total tenants and total income
+
+- `database_setup.sql`  
+  SQL script that:
+  - Creates `tenants` and `tenant_audit` tables
+  - Defines trigger and trigger function for auditing changes
+
+---
+
+## System Logic and Notifications
+In this project, tenant operations are handled as follows:
+
+### Insert (New Tenant Joins)
+- No immediate email is sent
+- New tenants are included only in the next day’s morning summary
 - Morning summary contains:
   - Total number of tenants
   - Total monthly income
-- No row-level details are sent
+- No row-level tenant details are sent
 
-### 🚨 UPDATE / DELETE (Tenant details modified or tenant leaves)
-- An **immediate email alert** is sent
-- Only **one affected tenant** per email
-- For **UPDATE**:
-  - Old data (before change)
-  - New data (after change)
-- For **DELETE**:
-  - Only old data (tenant who left)
-- Alerts are **never repeated**
+### Update (Tenant Details Modified)
+- Immediate email alert is sent
+- Email includes:
+  - Old tenant data (before update)
+  - New tenant data (after update)
+- Only one affected tenant per email
 
----
+### Delete (Tenant Leaves Hostel)
+- Immediate email alert is sent
+- Email includes:
+  - Old tenant data only
+- Alerts are sent one-by-one and never repeated
 
-## 🧠 System Design
-
-### Database Layer (PostgreSQL)
-- `tenants` table → stores current tenant data
-- `tenant_audit` table → stores UPDATE / DELETE history
-- Trigger automatically logs changes into `tenant_audit`
-- `processed` flag ensures alerts are sent only once
-
-### Application Layer (Python)
-- Single Python script
-- Runs every few minutes via scheduler
-- Handles:
-  - Real-time UPDATE / DELETE alerts
-  - Daily morning summary (time-based logic)
+A `processed` flag in the audit table ensures that each alert is sent exactly once.
 
 ---
 
-## 🗄️ Database Schema
+## Technologies Used
+- PostgreSQL
+- Python 3
+- psycopg2
+- smtplib (Gmail SMTP)
+- PostgreSQL Triggers
+- JSONB for audit data storage
 
-### `tenants` table
-```sql
-tenant_id SERIAL PRIMARY KEY
-name TEXT
-email TEXT
-room_no INT
-monthly_rent NUMERIC
-joined_on DATE
-updated_at TIMESTAMP
+---
+
+## Usage
+1. Execute the SQL script in PostgreSQL to set up tables and triggers  
+2. Update database credentials and email credentials in the Python script  
+3. Configure Gmail App Password for email alerts  
+4. Schedule the Python script to run every few minutes using:
+   - Windows Task Scheduler, or
+   - cron (Linux / macOS)
+5. The system will:
+   - Send real-time alerts for UPDATE / DELETE
+   - Send one daily morning summary automatically
+
+---
+
+## Author
+Manikanta (Mani)  
+Aspiring Data Engineer / Backend Developer
+
+---
+
+## ⭐ Notes
+This project focuses on real-world backend automation concepts such as:
+- Event-driven notifications
+- Database auditing
+- Time-based summaries
+- Avoiding duplicate alerts
+
+Future enhancements may include WhatsApp alerts, dashboards, or cloud deployment.
