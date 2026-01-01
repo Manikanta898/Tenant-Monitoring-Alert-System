@@ -1,4 +1,5 @@
-Hostel Tenant Monitoring System (PostgreSQL + Python)
+# Hostel Tenant Monitoring System 
+
 An automated backend system to monitor hostel tenant records and send real-time alerts and daily summaries using PostgreSQL triggers and Python.
 
 ---
@@ -36,7 +37,7 @@ No external datasets are required.
   - Sends real-time email alerts for UPDATE / DELETE operations
   - Sends a daily morning summary of total tenants and total income
 
-- `database_setup.sql`  
+- `Hostel_database.sql`  
   SQL script that:
   - Creates `tenants` and `tenant_audit` tables
   - Defines trigger and trigger function for auditing changes
@@ -86,21 +87,14 @@ A `processed` flag in the audit table ensures that each alert is sent exactly on
 2. Update database credentials and email credentials in the Python script  
 3. Configure Gmail App Password for email alerts  
 4. Schedule the Python script to run every few minutes using:
-   - Windows Task Scheduler, or
-   - cron (Linux / macOS)
+   - Windows Task Scheduler
 5. The system will:
    - Send real-time alerts for UPDATE / DELETE
    - Send one daily morning summary automatically
 
 ---
 
-## Author
-Manikanta (Mani)  
-Aspiring Data Engineer / Backend Developer
-
----
-
-## ⭐ Notes
+## Notes
 This project focuses on real-world backend automation concepts such as:
 - Event-driven notifications
 - Database auditing
